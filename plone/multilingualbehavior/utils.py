@@ -74,7 +74,6 @@ class LanguageIndependentFieldsManager(object):
                     if not (value == _marker):
                         # We check if not (value == _marker) because
                         # z3c.relationfield has an __eq__
-                        setattr(schema(translation), field_name, value)
                         if (not value) and INamedBlobFileField.providedBy(schema[field_name]):
                             value = getattr(schema(translation), field_name)
                             setattr(schema(self.context), field_name, value)
