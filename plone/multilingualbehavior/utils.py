@@ -17,6 +17,7 @@ from plone.multilingual.interfaces import ITranslationManager
 from zope.app.intid.interfaces import IIntIds
 from zope import component
 from z3c.relationfield import RelationValue
+from plone.namedfile.interfaces import INamedBlobFileField
 
 _marker = object()
 
@@ -74,6 +75,11 @@ class LanguageIndependentFieldsManager(object):
                         # We check if not (value == _marker) because
                         # z3c.relationfield has an __eq__
                         setattr(schema(translation), field_name, value)
+                        if (not value) and INamedBlobFileField.providedBy(schema[field_name]):
+                            value = getattr(schema(translation), field_name)
+                            setattr(schema(self.context), field_name, value)
+                        else:
+                            setattr(schema(translation), field_name, value)
 
         # If at least one field has been copied over to the translation
         # we need to inform subscriber to trigger an ObjectModifiedEvent
